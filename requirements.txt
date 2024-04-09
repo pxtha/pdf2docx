@@ -1,0 +1,4 @@
+flask>=3.0.3
+pdf2docx>=0.5.8
+minio>=7.2.5
+requests>=2.31.0
