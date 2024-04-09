@@ -33,7 +33,7 @@ def upload_docx(filepath, source_file):
 
     # Upload the file, renaming it in the process
     client.fput_object(
-        minio_bucket_name, filepath, source_file, minio_content_type
+        minio_bucket_name, source_file , filepath, minio_content_type
     )   
     print(
         source_file, "successfully uploaded as object",
@@ -41,8 +41,13 @@ def upload_docx(filepath, source_file):
     )
 
 @app.route('/pdf2docx', methods=['POST'])
-# body: url,filepath
 def generate_docx():
+    # body: url,filepath || 
+    # {
+    # "url":"http://host.docker.internal:9000/default/clto5dz7f00004ohi6qxp1yz8/resumes/cltrzykfk0001vu617pynwczh.pdf",
+    # "filepath":"clto5dz7f00004ohi6qxp1yz8/resumes/cltrzykfk0001vu617pynwczh.pdf"
+    #}
+    
     request_dictionary = json.loads(request.data)
     url = request_dictionary['url']
     filepath = request_dictionary['filepath']
@@ -57,8 +62,15 @@ def generate_docx():
     cv.convert(docx_file)
     cv.close()
 
+    # stucking at upload_docx func
     upload_docx(new_filepath, docx_file)
 
     return jsonify({"filepath": new_filepath})
 
-app.run(debug=True)
+@app.route("/", methods=["GET"])
+def hello_world():
+    return "<p>Hello, World!</p>"
+
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5055, debug=True)

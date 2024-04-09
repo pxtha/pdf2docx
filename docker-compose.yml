@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  python:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./DHK.docx:/usr/src/app/DHK.docx
+    ports:
+      - "5055:5055"
+
+volumes:
+  python_data:
